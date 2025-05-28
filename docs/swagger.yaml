@@ -3,8 +3,7 @@ definitions:
     properties:
       code:
         type: integer
-      data:
-        type: object
+      data: {}
       msg:
         type: string
     type: object
@@ -324,9 +323,9 @@ paths:
   /api/v1/tags/import:
     post:
       parameters:
-      - description: Image File
+      - description: Excel File
         in: formData
-        name: image
+        name: file
         required: true
         type: file
       produces:
@@ -340,7 +339,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Import Image
+      summary: Import article tag
   /auth:
     get:
       parameters:
@@ -366,4 +365,28 @@ paths:
           schema:
             $ref: '#/definitions/app.Response'
       summary: Get Auth
+  /auth/logout:
+    post:
+      parameters:
+      - description: Bearer Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: Logout
 swagger: "2.0"
