@@ -25,9 +25,7 @@ func JWT() gin.HandlerFunc {
 			code = e.INVALID_PARAMS
 		} else {
 			// Check if header starts with "Bearer "
-			if !strings.HasPrefix(authHeader, "Bearer ") {
-				code = e.INVALID_PARAMS
-			} else {
+			if strings.HasPrefix(authHeader, "Bearer ") {
 				// Extract token from "Bearer <token>"
 				token := strings.TrimPrefix(authHeader, "Bearer ")
 				if token == "" {
@@ -49,6 +47,9 @@ func JWT() gin.HandlerFunc {
 						}
 					}
 				}
+			} else {
+				// Invalid authorization format
+				code = e.INVALID_PARAMS
 			}
 		}
 

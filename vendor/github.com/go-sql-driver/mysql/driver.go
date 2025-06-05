@@ -8,10 +8,10 @@
 //
 // The driver should be used via the database/sql package:
 //
-//  import "database/sql"
-//  import _ "github.com/go-sql-driver/mysql"
+//	import "database/sql"
+//	import _ "github.com/go-sql-driver/mysql"
 //
-//  db, err := sql.Open("mysql", "user:password@/dbname")
+//	db, err := sql.Open("mysql", "user:password@/dbname")
 //
 // See https://github.com/go-sql-driver/mysql#usage for details
 package mysql
@@ -55,6 +55,15 @@ func RegisterDialContext(net string, dial DialContextFunc) {
 	dials[net] = dial
 }
 
+// DeregisterDialContext removes the custom dial function registered with the given net.
+func DeregisterDialContext(net string) {
+	dialsLock.Lock()
+	defer dialsLock.Unlock()
+	if dials != nil {
+		delete(dials, net)
+	}
+}
+
 // RegisterDial registers a custom dial function. It can then be used by the
 // network address mynet(addr), where mynet is the registered new network.
 // addr is passed as a parameter to the dial function.
@@ -74,12 +83,36 @@ func (d MySQLDriver) Open(dsn string) (driver.Conn, error) {
 	if err != nil {
 		return nil, err
 	}
-	c := &connector{
-		cfg: cfg,
-	}
+	c := newConnector(cfg)
 	return c.Connect(context.Background())
 }
 
+// This variable can be replaced with -ldflags like below:
+// go build "-ldflags=-X github.com/go-sql-driver/mysql.driverName=custom"
+var driverName = "mysql"
+
 func init() {
-	sql.Register("mysql", &MySQLDriver{})
+	if driverName != "" {
+		sql.Register(driverName, &MySQLDriver{})
+	}
+}
+
+// NewConnector returns new driver.Connector.
+func NewConnector(cfg *Config) (driver.Connector, error) {
+	cfg = cfg.Clone()
+	// normalize the contents of cfg so calls to NewConnector have the same
+	// behavior as MySQLDriver.OpenConnector
+	if err := cfg.normalize(); err != nil {
+		return nil, err
+	}
+	return newConnector(cfg), nil
+}
+
+// OpenConnector implements driver.DriverContext.
+func (d MySQLDriver) OpenConnector(dsn string) (driver.Connector, error) {
+	cfg, err := ParseDSN(dsn)
+	if err != nil {
+		return nil, err
+	}
+	return newConnector(cfg), nil
 }

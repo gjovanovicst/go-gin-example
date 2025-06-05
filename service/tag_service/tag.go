@@ -23,6 +23,7 @@ type Tag struct {
 	CreatedBy  string
 	ModifiedBy string
 	State      int
+	Description string // New test column
 
 	PageNum  int
 	PageSize int
@@ -37,13 +38,14 @@ func (t *Tag) ExistByID() (bool, error) {
 }
 
 func (t *Tag) Add() error {
-	return models.AddTag(t.Name, t.State, t.CreatedBy)
+	return models.AddTag(t.Name, t.State, t.CreatedBy, t.Description)
 }
 
 func (t *Tag) Edit() error {
 	data := make(map[string]interface{})
 	data["modified_by"] = t.ModifiedBy
 	data["name"] = t.Name
+	data["description"] = t.Description // New test column
 	if t.State >= 0 {
 		data["state"] = t.State
 	}
@@ -97,12 +99,12 @@ func (t *Tag) Export() (string, error) {
 	}
 
 	xlsFile := xlsx.NewFile()
-	sheet, err := xlsFile.AddSheet("标签信息")
+	sheet, err := xlsFile.AddSheet("Tag Info")
 	if err != nil {
 		return "", err
 	}
 
-	titles := []string{"ID", "名称", "创建人", "创建时间", "修改人", "修改时间"}
+	titles := []string{"ID", "Name", "Created By", "Created On", "Modified By", "Modified On"}
 	row := sheet.AddRow()
 
 	var cell *xlsx.Cell
@@ -151,7 +153,7 @@ func (t *Tag) Import(r io.Reader) error {
 		return err
 	}
 
-	rows := xlsx.GetRows("标签信息")
+	rows := xlsx.GetRows("Tag Info")
 	for irow, row := range rows {
 		if irow > 0 {
 			var data []string
@@ -159,7 +161,7 @@ func (t *Tag) Import(r io.Reader) error {
 				data = append(data, cell)
 			}
 
-			models.AddTag(data[1], 1, data[2])
+			models.AddTag(data[1], 1, data[2], "")
 		}
 	}
 

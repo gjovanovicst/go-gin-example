@@ -21,20 +21,17 @@ paths:
     get:
       parameters:
       - description: TagID
-        in: body
+        in: query
         name: tag_id
-        schema:
-          type: integer
+        type: integer
       - description: State
-        in: body
+        in: query
         name: state
-        schema:
-          type: integer
+        type: integer
       - description: CreatedBy
-        in: body
+        in: query
         name: created_by
-        schema:
-          type: integer
+        type: integer
       produces:
       - application/json
       responses:
@@ -42,49 +39,54 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Get multiple articles
     post:
       parameters:
       - description: TagID
-        in: body
+        in: formData
         name: tag_id
         required: true
-        schema:
-          type: integer
+        type: integer
       - description: Title
-        in: body
+        in: formData
         name: title
         required: true
-        schema:
-          type: string
+        type: string
       - description: Desc
-        in: body
+        in: formData
         name: desc
         required: true
-        schema:
-          type: string
+        type: string
       - description: Content
-        in: body
+        in: formData
         name: content
         required: true
-        schema:
-          type: string
+        type: string
       - description: CreatedBy
-        in: body
+        in: formData
         name: created_by
         required: true
-        schema:
-          type: string
+        type: string
+      - description: CoverImageUrl
+        in: formData
+        name: cover_image_url
+        required: true
+        type: string
       - description: State
-        in: body
+        in: formData
         name: state
         required: true
-        schema:
-          type: integer
+        type: integer
       produces:
       - application/json
       responses:
@@ -92,10 +94,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Add article
   /api/v1/articles/{id}:
     delete:
@@ -112,10 +120,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Delete article
     get:
       parameters:
@@ -131,10 +145,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Get a single article
     put:
       parameters:
@@ -144,36 +164,34 @@ paths:
         required: true
         type: integer
       - description: TagID
-        in: body
+        in: formData
         name: tag_id
-        schema:
-          type: string
+        type: integer
       - description: Title
-        in: body
+        in: formData
         name: title
-        schema:
-          type: string
+        type: string
       - description: Desc
-        in: body
+        in: formData
         name: desc
-        schema:
-          type: string
+        type: string
       - description: Content
-        in: body
+        in: formData
         name: content
-        schema:
-          type: string
+        type: string
       - description: ModifiedBy
-        in: body
+        in: formData
         name: modified_by
         required: true
-        schema:
-          type: string
+        type: string
+      - description: CoverImageUrl
+        in: formData
+        name: cover_image_url
+        type: string
       - description: State
-        in: body
+        in: formData
         name: state
-        schema:
-          type: integer
+        type: integer
       produces:
       - application/json
       responses:
@@ -181,11 +199,37 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Update article
+  /api/v1/articles/poster/generate:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
+      summary: Generate article poster
   /api/v1/tags:
     get:
       parameters:
@@ -204,29 +248,32 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Get multiple article tags
     post:
       parameters:
       - description: Name
-        in: body
+        in: formData
         name: name
         required: true
-        schema:
-          type: string
+        type: string
       - description: State
-        in: body
+        in: formData
         name: state
-        schema:
-          type: integer
+        type: integer
       - description: CreatedBy
-        in: body
+        in: formData
         name: created_by
-        schema:
-          type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -234,10 +281,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Add article tag
   /api/v1/tags/{id}:
     delete:
@@ -254,10 +307,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Delete article tag
     put:
       parameters:
@@ -267,22 +326,19 @@ paths:
         required: true
         type: integer
       - description: Name
-        in: body
+        in: formData
         name: name
         required: true
-        schema:
-          type: string
+        type: string
       - description: State
-        in: body
+        in: formData
         name: state
-        schema:
-          type: integer
+        type: integer
       - description: ModifiedBy
-        in: body
+        in: formData
         name: modified_by
         required: true
-        schema:
-          type: string
+        type: string
       produces:
       - application/json
       responses:
@@ -290,24 +346,28 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Update article tag
   /api/v1/tags/export:
     post:
       parameters:
       - description: Name
-        in: body
+        in: formData
         name: name
-        schema:
-          type: string
+        type: string
       - description: State
-        in: body
+        in: formData
         name: state
-        schema:
-          type: integer
+        type: integer
       produces:
       - application/json
       responses:
@@ -315,10 +375,16 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Export article tag
   /api/v1/tags/import:
     post:
@@ -335,36 +401,58 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
+      security:
+      - BearerAuth: []
       summary: Import article tag
   /auth:
-    get:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
       parameters:
       - description: userName
-        in: query
+        in: formData
         name: username
         required: true
         type: string
       - description: password
-        in: query
+        in: formData
         name: password
         required: true
+        type: string
+      - default: password
+        description: Grant Type
+        in: formData
+        name: grant_type
         type: string
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: '{"access_token": "jwt_token", "token_type": "Bearer"}'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/app.Response'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/app.Response'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/app.Response'
-      summary: Get Auth
+      summary: Login
   /auth/logout:
     post:
       parameters:
@@ -389,4 +477,11 @@ paths:
           schema:
             $ref: '#/definitions/app.Response'
       summary: Logout
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token. Use /auth endpoint
+      to get token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

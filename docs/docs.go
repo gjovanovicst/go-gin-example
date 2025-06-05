@@ -23,39 +23,44 @@ const docTemplate = `{
     "paths": {
         "/api/v1/articles": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "Get multiple articles",
                 "parameters": [
                     {
+                        "type": "integer",
                         "description": "TagID",
                         "name": "tag_id",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "query"
                     },
                     {
+                        "type": "integer",
                         "description": "CreatedBy",
                         "name": "created_by",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -69,69 +74,108 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "Add article",
                 "parameters": [
                     {
+                        "type": "integer",
                         "description": "TagID",
                         "name": "tag_id",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Title",
                         "name": "title",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Desc",
                         "name": "desc",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Content",
                         "name": "content",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
                         "description": "CreatedBy",
                         "name": "created_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "CoverImageUrl",
+                        "name": "cover_image_url",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/articles/poster/generate": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Generate article poster",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -147,6 +191,11 @@ const docTemplate = `{
         },
         "/api/v1/articles/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -167,6 +216,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -176,6 +231,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -189,58 +249,58 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "integer",
                         "description": "TagID",
                         "name": "tag_id",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "Title",
                         "name": "title",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "Desc",
                         "name": "desc",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "Content",
                         "name": "content",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "ModifiedBy",
                         "name": "modified_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "CoverImageUrl",
+                        "name": "cover_image_url",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -254,6 +314,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -274,6 +339,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -285,6 +356,11 @@ const docTemplate = `{
         },
         "/api/v1/tags": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -310,6 +386,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -319,40 +401,45 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "Add article tag",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "Name",
                         "name": "name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "CreatedBy",
                         "name": "created_by",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -368,31 +455,38 @@ const docTemplate = `{
         },
         "/api/v1/tags/export": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "summary": "Export article tag",
                 "parameters": [
                     {
+                        "type": "string",
                         "description": "Name",
                         "name": "name",
-                        "in": "body",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -408,6 +502,11 @@ const docTemplate = `{
         },
         "/api/v1/tags/import": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -428,6 +527,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -439,6 +544,11 @@ const docTemplate = `{
         },
         "/api/v1/tags/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -452,35 +562,35 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
                         "description": "Name",
                         "name": "name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     },
                     {
+                        "type": "integer",
                         "description": "State",
                         "name": "state",
-                        "in": "body",
-                        "schema": {
-                            "type": "integer"
-                        }
+                        "in": "formData"
                     },
                     {
+                        "type": "string",
                         "description": "ModifiedBy",
                         "name": "modified_by",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -494,6 +604,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -514,6 +629,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/app.Response"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -524,30 +645,53 @@ const docTemplate = `{
             }
         },
         "/auth": {
-            "get": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Auth",
+                "summary": "Login",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "userName",
                         "name": "username",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "password",
                         "name": "password",
-                        "in": "query",
+                        "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "password",
+                        "description": "Grant Type",
+                        "name": "grant_type",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "{\"access_token\": \"jwt_token\", \"token_type\": \"Bearer\"}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/app.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/app.Response"
                         }
@@ -611,6 +755,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer\" followed by a space and JWT token. Use /auth endpoint to get token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

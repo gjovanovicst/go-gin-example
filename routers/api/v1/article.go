@@ -21,7 +21,9 @@ import (
 // @Produce  json
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/articles/{id} [get]
 func GetArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -57,24 +59,26 @@ func GetArticle(c *gin.Context) {
 
 // @Summary Get multiple articles
 // @Produce  json
-// @Param tag_id body int false "TagID"
-// @Param state body int false "State"
-// @Param created_by body int false "CreatedBy"
+// @Param tag_id query int false "TagID"
+// @Param state query int false "State"
+// @Param created_by query int false "CreatedBy"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/articles [get]
 func GetArticles(c *gin.Context) {
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
 	state := -1
-	if arg := c.PostForm("state"); arg != "" {
+	if arg := c.Query("state"); arg != "" {
 		state = com.StrTo(arg).MustInt()
 		valid.Range(state, 0, 1, "state")
 	}
 
 	tagId := -1
-	if arg := c.PostForm("tag_id"); arg != "" {
+	if arg := c.Query("tag_id"); arg != "" {
 		tagId = com.StrTo(arg).MustInt()
 		valid.Min(tagId, 1, "tag_id")
 	}
@@ -123,14 +127,17 @@ type AddArticleForm struct {
 
 // @Summary Add article
 // @Produce  json
-// @Param tag_id body int true "TagID"
-// @Param title body string true "Title"
-// @Param desc body string true "Desc"
-// @Param content body string true "Content"
-// @Param created_by body string true "CreatedBy"
-// @Param state body int true "State"
+// @Param tag_id formData int true "TagID"
+// @Param title formData string true "Title"
+// @Param desc formData string true "Desc"
+// @Param content formData string true "Content"
+// @Param created_by formData string true "CreatedBy"
+// @Param cover_image_url formData string true "CoverImageUrl"
+// @Param state formData int true "State"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/articles [post]
 func AddArticle(c *gin.Context) {
 	var (
@@ -187,14 +194,17 @@ type EditArticleForm struct {
 // @Summary Update article
 // @Produce  json
 // @Param id path int true "ID"
-// @Param tag_id body string false "TagID"
-// @Param title body string false "Title"
-// @Param desc body string false "Desc"
-// @Param content body string false "Content"
-// @Param modified_by body string true "ModifiedBy"
-// @Param state body int false "State"
+// @Param tag_id formData int false "TagID"
+// @Param title formData string false "Title"
+// @Param desc formData string false "Desc"
+// @Param content formData string false "Content"
+// @Param modified_by formData string true "ModifiedBy"
+// @Param cover_image_url formData string false "CoverImageUrl"
+// @Param state formData int false "State"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/articles/{id} [put]
 func EditArticle(c *gin.Context) {
 	var (
@@ -253,7 +263,9 @@ func EditArticle(c *gin.Context) {
 // @Produce  json
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/articles/{id} [delete]
 func DeleteArticle(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -291,6 +303,13 @@ const (
 	QRCODE_URL = "https://github.com/EDDYCJY/blog#gin%E7%B3%BB%E5%88%97%E7%9B%AE%E5%BD%95"
 )
 
+// @Summary Generate article poster
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Security BearerAuth
+// @Router /api/v1/articles/poster/generate [post]
 func GenerateArticlePoster(c *gin.Context) {
 	appG := app.Gin{C: c}
 	article := &article_service.Article{}

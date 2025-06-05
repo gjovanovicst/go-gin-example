@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
+	"github.com/EDDYCJY/go-gin-example/pkg/migration"
 	"github.com/EDDYCJY/go-gin-example/pkg/setting"
 	"time"
 )
@@ -43,6 +44,12 @@ func Setup() {
 	db.Callback().Delete().Replace("gorm:delete", deleteCallback)
 	db.DB().SetMaxIdleConns(10)
 	db.DB().SetMaxOpenConns(100)
+
+	// Run migrations automatically on startup
+	log.Println("Running database migrations...")
+	if err := migration.RunMigrations(); err != nil {
+		log.Printf("Migration warning: %v", err)
+	}
 }
 
 // CloseDB closes database connection (unnecessary)

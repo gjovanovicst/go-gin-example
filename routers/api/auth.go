@@ -18,26 +18,49 @@ type auth struct {
 	Password string `valid:"Required; MaxSize(50)"`
 }
 
-// @Summary Get Auth
+// @Summary Login
+// @Accept application/x-www-form-urlencoded
 // @Produce  json
-// @Param username query string true "userName"
-// @Param password query string true "password"
-// @Success 200 {object} app.Response
+// @Param username formData string true "userName"
+// @Param password formData string true "password"
+// @Param grant_type formData string false "Grant Type" default(password)
+// @Success 200 {object} map[string]interface{} "{"access_token": "jwt_token", "token_type": "Bearer"}"
+// @Failure 400 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
-// @Router /auth [get]
+// @Router /auth [post]
 func GetAuth(c *gin.Context) {
 	appG := app.Gin{C: c}
 	valid := validation.Validation{}
 
-	username := c.Query("username")
-	password := c.Query("password")
+	// Handle both form data and JSON
+	var username, password string
+	
+	contentType := c.GetHeader("Content-Type")
+	if strings.Contains(contentType, "application/x-www-form-urlencoded") {
+		username = c.PostForm("username")
+		password = c.PostForm("password")
+	} else {
+		username = c.PostForm("username")
+		password = c.PostForm("password")
+		// Also try JSON format as fallback
+		if username == "" || password == "" {
+			username = c.Query("username")
+			password = c.Query("password")
+		}
+	}
 
 	a := auth{Username: username, Password: password}
+	
 	ok, _ := valid.Valid(&a)
 
 	if !ok {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, map[string]interface{}{
+			"errors": valid.Errors,
+			"username": username,
+			"password_length": len(password),
+		})
 		return
 	}
 
@@ -59,8 +82,10 @@ func GetAuth(c *gin.Context) {
 		return
 	}
 
-	appG.Response(http.StatusOK, e.SUCCESS, map[string]string{
-		"token": token,
+	appG.Response(http.StatusOK, e.SUCCESS, map[string]interface{}{
+		"access_token": token,
+		"token_type": "Bearer",
+		"expires_in": 3600,
 	})
 }
 

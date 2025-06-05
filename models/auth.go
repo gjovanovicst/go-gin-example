@@ -4,8 +4,8 @@ import "github.com/jinzhu/gorm"
 
 type Auth struct {
 	ID       int    `gorm:"primary_key" json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `gorm:"size:50" json:"username"`
+	Password string `gorm:"size:60" json:"password"`
 }
 
 // CheckAuth checks if authentication information exists

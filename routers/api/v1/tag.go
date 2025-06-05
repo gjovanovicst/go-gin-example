@@ -21,7 +21,9 @@ import (
 // @Param name query string false "Name"
 // @Param state query int false "State"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags [get]
 func GetTags(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -59,15 +61,18 @@ type AddTagForm struct {
 	Name      string `form:"name" valid:"Required;MaxSize(100)"`
 	CreatedBy string `form:"created_by" valid:"Required;MaxSize(100)"`
 	State     int    `form:"state" valid:"Range(0,1)"`
+	Description string `form:"description" valid:"MaxSize(255)"` // New test column
 }
 
 // @Summary Add article tag
 // @Produce  json
-// @Param name body string true "Name"
-// @Param state body int false "State"
-// @Param created_by body int false "CreatedBy"
+// @Param name formData string true "Name"
+// @Param state formData int false "State"
+// @Param created_by formData string false "CreatedBy"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags [post]
 func AddTag(c *gin.Context) {
 	var (
@@ -82,9 +87,10 @@ func AddTag(c *gin.Context) {
 	}
 
 	tagService := tag_service.Tag{
-		Name:      form.Name,
-		CreatedBy: form.CreatedBy,
-		State:     form.State,
+		Name:        form.Name,
+		CreatedBy:   form.CreatedBy,
+		State:       form.State,
+		Description: form.Description,
 	}
 	exists, err := tagService.ExistByName()
 	if err != nil {
@@ -110,16 +116,19 @@ type EditTagForm struct {
 	Name       string `form:"name" valid:"Required;MaxSize(100)"`
 	ModifiedBy string `form:"modified_by" valid:"Required;MaxSize(100)"`
 	State      int    `form:"state" valid:"Range(0,1)"`
+	Description string `form:"description" valid:"MaxSize(255)"` // New test column
 }
 
 // @Summary Update article tag
 // @Produce  json
 // @Param id path int true "ID"
-// @Param name body string true "Name"
-// @Param state body int false "State"
-// @Param modified_by body string true "ModifiedBy"
+// @Param name formData string true "Name"
+// @Param state formData int false "State"
+// @Param modified_by formData string true "ModifiedBy"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags/{id} [put]
 func EditTag(c *gin.Context) {
 	var (
@@ -134,10 +143,11 @@ func EditTag(c *gin.Context) {
 	}
 
 	tagService := tag_service.Tag{
-		ID:         form.ID,
-		Name:       form.Name,
-		ModifiedBy: form.ModifiedBy,
-		State:      form.State,
+		ID:          form.ID,
+		Name:        form.Name,
+		ModifiedBy:  form.ModifiedBy,
+		State:       form.State,
+		Description: form.Description,
 	}
 
 	exists, err := tagService.ExistByID()
@@ -164,7 +174,9 @@ func EditTag(c *gin.Context) {
 // @Produce  json
 // @Param id path int true "ID"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags/{id} [delete]
 func DeleteTag(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -199,10 +211,12 @@ func DeleteTag(c *gin.Context) {
 
 // @Summary Export article tag
 // @Produce  json
-// @Param name body string false "Name"
-// @Param state body int false "State"
+// @Param name formData string false "Name"
+// @Param state formData int false "State"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags/export [post]
 func ExportTag(c *gin.Context) {
 	appG := app.Gin{C: c}
@@ -233,7 +247,9 @@ func ExportTag(c *gin.Context) {
 // @Produce  json
 // @Param file formData file true "Excel File"
 // @Success 200 {object} app.Response
+// @Failure 401 {object} app.Response
 // @Failure 500 {object} app.Response
+// @Security BearerAuth
 // @Router /api/v1/tags/import [post]
 func ImportTag(c *gin.Context) {
 	appG := app.Gin{C: c}
