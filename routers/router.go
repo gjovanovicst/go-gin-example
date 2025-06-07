@@ -28,7 +28,10 @@ func InitRouter() *gin.Engine {
 	r.StaticFS("/qrcode", http.Dir(qrcode.GetQrCodeFullPath()))
 
 	r.POST("/auth", api.GetAuth)
+	r.POST("/auth/register", api.Register)
 	r.POST("/auth/logout", api.Logout)
+	r.GET("/auth/:provider", api.GetOAuthURL)
+	r.GET("/auth/:provider/callback", api.OAuthCallback)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
