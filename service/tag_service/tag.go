@@ -38,7 +38,7 @@ func (t *Tag) ExistByID() (bool, error) {
 }
 
 func (t *Tag) Add() error {
-	return models.AddTag(t.Name, t.State, t.CreatedBy, t.Description)
+	return models.AddTag(t.Name, t.State, t.CreatedBy)
 }
 
 func (t *Tag) Edit() error {
@@ -161,7 +161,7 @@ func (t *Tag) Import(r io.Reader) error {
 				data = append(data, cell)
 			}
 
-			models.AddTag(data[1], 1, data[2], "")
+			models.AddTag(data[1], 1, data[2])
 		}
 	}
 

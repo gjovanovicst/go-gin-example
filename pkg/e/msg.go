@@ -26,7 +26,7 @@ var MsgFlags = map[int]string{
 	ERROR_AUTH_CHECK_TOKEN_FAIL:     "Token authentication failed",
 	ERROR_AUTH_CHECK_TOKEN_TIMEOUT:  "Token has expired",
 	ERROR_AUTH_TOKEN:                "Failed to generate token",
-	ERROR_AUTH:                      "Token error",
+	ERROR_AUTH:                      "Invalid username or password",
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL:    "Failed to save image",
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL:   "Failed to check image",
 	ERROR_UPLOAD_CHECK_IMAGE_FORMAT: "Image validation error, problem with format or size",

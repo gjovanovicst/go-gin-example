@@ -56,11 +56,7 @@ func GetAuth(c *gin.Context) {
 
 	if !ok {
 		app.MarkErrors(valid.Errors)
-		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, map[string]interface{}{
-			"errors": valid.Errors,
-			"username": username,
-			"password_length": len(password),
-		})
+		appG.Response(http.StatusBadRequest, e.INVALID_PARAMS, nil)
 		return
 	}
 

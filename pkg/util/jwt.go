@@ -22,8 +22,8 @@ func GenerateToken(username, password string) (string, error) {
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		EncodeMD5(username),
-		EncodeMD5(password),
+		username,
+		"", // Don't store password in token for security
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "gin-blog",
@@ -36,8 +36,8 @@ func GenerateToken(username, password string) (string, error) {
 		return "", err
 	}
 
-	// Store token in Redis
-	err = jwt_redis_service.StoreToken(EncodeMD5(username), token)
+	// Store token in Redis (fallback enabled)
+	err = jwt_redis_service.StoreToken(username, token)
 	if err != nil {
 		return "", err
 	}

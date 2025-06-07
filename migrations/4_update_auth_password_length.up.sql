@@ -1,0 +1,1 @@
+ALTER TABLE `blog_auth` MODIFY COLUMN `password` varchar(60) DEFAULT '' COMMENT '密码';
